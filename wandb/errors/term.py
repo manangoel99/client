@@ -26,6 +26,22 @@ def termsetup(settings, logger):
     _logger = logger
 
 
+def termlevel(level: int) -> None:
+    global _show_info, _show_warnings, _show_errors
+    if level == logging.INFO:
+        _show_info = True
+        _show_warnings = True
+        _show_errors = True
+    elif level == logging.WARNING:
+        _show_info = False
+        _show_warnings = True
+        _show_errors = True
+    elif level == logging.ERROR:
+        _show_info = False
+        _show_warnings = False
+        _show_errors = True
+
+
 def termlog(
     string: str = "", newline: bool = True, repeat: bool = True, prefix: bool = True
 ) -> None:
@@ -84,7 +100,7 @@ def _log(
     # Repeated line tracking limited to 1k messages
     if len(PRINTED_MESSAGES) < 1000:
         PRINTED_MESSAGES.add(line)
-    if silent:
+    if silent and _logger:
         if level == logging.ERROR:
             _logger.error(line)
         elif level == logging.WARNING:
